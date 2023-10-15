@@ -1,0 +1,17 @@
+[package]
+name = "jh71xx-hal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bitflags = "2.4"
+embedded-hal = "1.0.0-alpha"
+heapless = "0.7"
+
+[dependencies.riscv]
+version = "0.10"
+
+[dependencies.pac]
+package = "jh71xx-pac"
+version = "0.1"
+git = "https://github.com/rmsyn/jh71xx-pac"
