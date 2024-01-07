@@ -100,7 +100,6 @@ pub struct Gpio<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> {
 }
 
 impl<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> Gpio<'g, GPIO, ENABLED, DIRECTION, MODE> {
-
     /// Converts the [Gpio] into a disabled pin.
     pub fn into_disabled(mut self) -> Gpio<'g, GPIO, Disabled, Nop, Nop> {
         self.periph.input_enable(false);
@@ -160,7 +159,7 @@ impl<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> Gpio<'g, GPIO, ENABLED, DIRECT
         // - setting SET_LOW to zero enables the GPIO driven low
         // - setting SET_HIGH to one enables the GPIO driven high
         // - setting SET_LOW(1) SET_HIGH(0) brings the GPIO to driven neutral
-        let cfg: u8 = config.into(); 
+        let cfg: u8 = config.into();
         match pad {
             0 => pinctrl.gpo_doen_0().modify(|_, w| w.doen_0().variant(cfg)),
             1 => pinctrl.gpo_doen_0().modify(|_, w| w.doen_1().variant(cfg)),
@@ -202,30 +201,78 @@ impl<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> Gpio<'g, GPIO, ENABLED, DIRECT
             37 => pinctrl.gpo_doen_9().modify(|_, w| w.doen_37().variant(cfg)),
             38 => pinctrl.gpo_doen_9().modify(|_, w| w.doen_38().variant(cfg)),
             39 => pinctrl.gpo_doen_9().modify(|_, w| w.doen_39().variant(cfg)),
-            40 => pinctrl.gpo_doen_10().modify(|_, w| w.doen_40().variant(cfg)),
-            41 => pinctrl.gpo_doen_10().modify(|_, w| w.doen_41().variant(cfg)),
-            42 => pinctrl.gpo_doen_10().modify(|_, w| w.doen_42().variant(cfg)),
-            43 => pinctrl.gpo_doen_10().modify(|_, w| w.doen_43().variant(cfg)),
-            44 => pinctrl.gpo_doen_11().modify(|_, w| w.doen_44().variant(cfg)),
-            45 => pinctrl.gpo_doen_11().modify(|_, w| w.doen_45().variant(cfg)),
-            46 => pinctrl.gpo_doen_11().modify(|_, w| w.doen_46().variant(cfg)),
-            47 => pinctrl.gpo_doen_11().modify(|_, w| w.doen_47().variant(cfg)),
-            48 => pinctrl.gpo_doen_12().modify(|_, w| w.doen_48().variant(cfg)),
-            49 => pinctrl.gpo_doen_12().modify(|_, w| w.doen_49().variant(cfg)),
-            50 => pinctrl.gpo_doen_12().modify(|_, w| w.doen_50().variant(cfg)),
-            51 => pinctrl.gpo_doen_12().modify(|_, w| w.doen_51().variant(cfg)),
-            52 => pinctrl.gpo_doen_13().modify(|_, w| w.doen_52().variant(cfg)),
-            53 => pinctrl.gpo_doen_13().modify(|_, w| w.doen_53().variant(cfg)),
-            54 => pinctrl.gpo_doen_13().modify(|_, w| w.doen_54().variant(cfg)),
-            55 => pinctrl.gpo_doen_13().modify(|_, w| w.doen_55().variant(cfg)),
-            56 => pinctrl.gpo_doen_14().modify(|_, w| w.doen_56().variant(cfg)),
-            57 => pinctrl.gpo_doen_14().modify(|_, w| w.doen_57().variant(cfg)),
-            58 => pinctrl.gpo_doen_14().modify(|_, w| w.doen_58().variant(cfg)),
-            59 => pinctrl.gpo_doen_14().modify(|_, w| w.doen_59().variant(cfg)),
-            60 => pinctrl.gpo_doen_15().modify(|_, w| w.doen_60().variant(cfg)),
-            61 => pinctrl.gpo_doen_15().modify(|_, w| w.doen_61().variant(cfg)),
-            62 => pinctrl.gpo_doen_15().modify(|_, w| w.doen_62().variant(cfg)),
-            63 => pinctrl.gpo_doen_15().modify(|_, w| w.doen_63().variant(cfg)),
+            40 => pinctrl
+                .gpo_doen_10()
+                .modify(|_, w| w.doen_40().variant(cfg)),
+            41 => pinctrl
+                .gpo_doen_10()
+                .modify(|_, w| w.doen_41().variant(cfg)),
+            42 => pinctrl
+                .gpo_doen_10()
+                .modify(|_, w| w.doen_42().variant(cfg)),
+            43 => pinctrl
+                .gpo_doen_10()
+                .modify(|_, w| w.doen_43().variant(cfg)),
+            44 => pinctrl
+                .gpo_doen_11()
+                .modify(|_, w| w.doen_44().variant(cfg)),
+            45 => pinctrl
+                .gpo_doen_11()
+                .modify(|_, w| w.doen_45().variant(cfg)),
+            46 => pinctrl
+                .gpo_doen_11()
+                .modify(|_, w| w.doen_46().variant(cfg)),
+            47 => pinctrl
+                .gpo_doen_11()
+                .modify(|_, w| w.doen_47().variant(cfg)),
+            48 => pinctrl
+                .gpo_doen_12()
+                .modify(|_, w| w.doen_48().variant(cfg)),
+            49 => pinctrl
+                .gpo_doen_12()
+                .modify(|_, w| w.doen_49().variant(cfg)),
+            50 => pinctrl
+                .gpo_doen_12()
+                .modify(|_, w| w.doen_50().variant(cfg)),
+            51 => pinctrl
+                .gpo_doen_12()
+                .modify(|_, w| w.doen_51().variant(cfg)),
+            52 => pinctrl
+                .gpo_doen_13()
+                .modify(|_, w| w.doen_52().variant(cfg)),
+            53 => pinctrl
+                .gpo_doen_13()
+                .modify(|_, w| w.doen_53().variant(cfg)),
+            54 => pinctrl
+                .gpo_doen_13()
+                .modify(|_, w| w.doen_54().variant(cfg)),
+            55 => pinctrl
+                .gpo_doen_13()
+                .modify(|_, w| w.doen_55().variant(cfg)),
+            56 => pinctrl
+                .gpo_doen_14()
+                .modify(|_, w| w.doen_56().variant(cfg)),
+            57 => pinctrl
+                .gpo_doen_14()
+                .modify(|_, w| w.doen_57().variant(cfg)),
+            58 => pinctrl
+                .gpo_doen_14()
+                .modify(|_, w| w.doen_58().variant(cfg)),
+            59 => pinctrl
+                .gpo_doen_14()
+                .modify(|_, w| w.doen_59().variant(cfg)),
+            60 => pinctrl
+                .gpo_doen_15()
+                .modify(|_, w| w.doen_60().variant(cfg)),
+            61 => pinctrl
+                .gpo_doen_15()
+                .modify(|_, w| w.doen_61().variant(cfg)),
+            62 => pinctrl
+                .gpo_doen_15()
+                .modify(|_, w| w.doen_62().variant(cfg)),
+            63 => pinctrl
+                .gpo_doen_15()
+                .modify(|_, w| w.doen_63().variant(cfg)),
             _ => (),
         }
     }
@@ -241,7 +288,7 @@ impl<'g, GPIO: GpioCfg> Gpio<'g, GPIO, Enabled, Output, Nop> {
         let pinctrl = unsafe { &*SYS_PINCTRL::ptr() };
         let pad = GPIO::pad();
 
-        let val: u8 = drive.into(); 
+        let val: u8 = drive.into();
         match pad {
             0 => pinctrl.gpo_dout_0().modify(|_, w| w.dout_0().variant(val)),
             1 => pinctrl.gpo_dout_0().modify(|_, w| w.dout_1().variant(val)),
@@ -283,37 +330,85 @@ impl<'g, GPIO: GpioCfg> Gpio<'g, GPIO, Enabled, Output, Nop> {
             37 => pinctrl.gpo_dout_9().modify(|_, w| w.dout_37().variant(val)),
             38 => pinctrl.gpo_dout_9().modify(|_, w| w.dout_38().variant(val)),
             39 => pinctrl.gpo_dout_9().modify(|_, w| w.dout_39().variant(val)),
-            40 => pinctrl.gpo_dout_10().modify(|_, w| w.dout_40().variant(val)),
-            41 => pinctrl.gpo_dout_10().modify(|_, w| w.dout_41().variant(val)),
-            42 => pinctrl.gpo_dout_10().modify(|_, w| w.dout_42().variant(val)),
-            43 => pinctrl.gpo_dout_10().modify(|_, w| w.dout_43().variant(val)),
-            44 => pinctrl.gpo_dout_11().modify(|_, w| w.dout_44().variant(val)),
-            45 => pinctrl.gpo_dout_11().modify(|_, w| w.dout_45().variant(val)),
-            46 => pinctrl.gpo_dout_11().modify(|_, w| w.dout_46().variant(val)),
-            47 => pinctrl.gpo_dout_11().modify(|_, w| w.dout_47().variant(val)),
-            48 => pinctrl.gpo_dout_12().modify(|_, w| w.dout_48().variant(val)),
-            49 => pinctrl.gpo_dout_12().modify(|_, w| w.dout_49().variant(val)),
-            50 => pinctrl.gpo_dout_12().modify(|_, w| w.dout_50().variant(val)),
-            51 => pinctrl.gpo_dout_12().modify(|_, w| w.dout_51().variant(val)),
-            52 => pinctrl.gpo_dout_13().modify(|_, w| w.dout_52().variant(val)),
-            53 => pinctrl.gpo_dout_13().modify(|_, w| w.dout_53().variant(val)),
-            54 => pinctrl.gpo_dout_13().modify(|_, w| w.dout_54().variant(val)),
-            55 => pinctrl.gpo_dout_13().modify(|_, w| w.dout_55().variant(val)),
-            56 => pinctrl.gpo_dout_14().modify(|_, w| w.dout_56().variant(val)),
-            57 => pinctrl.gpo_dout_14().modify(|_, w| w.dout_57().variant(val)),
-            58 => pinctrl.gpo_dout_14().modify(|_, w| w.dout_58().variant(val)),
-            59 => pinctrl.gpo_dout_14().modify(|_, w| w.dout_59().variant(val)),
-            60 => pinctrl.gpo_dout_15().modify(|_, w| w.dout_60().variant(val)),
-            61 => pinctrl.gpo_dout_15().modify(|_, w| w.dout_61().variant(val)),
-            62 => pinctrl.gpo_dout_15().modify(|_, w| w.dout_62().variant(val)),
-            63 => pinctrl.gpo_dout_15().modify(|_, w| w.dout_63().variant(val)),
+            40 => pinctrl
+                .gpo_dout_10()
+                .modify(|_, w| w.dout_40().variant(val)),
+            41 => pinctrl
+                .gpo_dout_10()
+                .modify(|_, w| w.dout_41().variant(val)),
+            42 => pinctrl
+                .gpo_dout_10()
+                .modify(|_, w| w.dout_42().variant(val)),
+            43 => pinctrl
+                .gpo_dout_10()
+                .modify(|_, w| w.dout_43().variant(val)),
+            44 => pinctrl
+                .gpo_dout_11()
+                .modify(|_, w| w.dout_44().variant(val)),
+            45 => pinctrl
+                .gpo_dout_11()
+                .modify(|_, w| w.dout_45().variant(val)),
+            46 => pinctrl
+                .gpo_dout_11()
+                .modify(|_, w| w.dout_46().variant(val)),
+            47 => pinctrl
+                .gpo_dout_11()
+                .modify(|_, w| w.dout_47().variant(val)),
+            48 => pinctrl
+                .gpo_dout_12()
+                .modify(|_, w| w.dout_48().variant(val)),
+            49 => pinctrl
+                .gpo_dout_12()
+                .modify(|_, w| w.dout_49().variant(val)),
+            50 => pinctrl
+                .gpo_dout_12()
+                .modify(|_, w| w.dout_50().variant(val)),
+            51 => pinctrl
+                .gpo_dout_12()
+                .modify(|_, w| w.dout_51().variant(val)),
+            52 => pinctrl
+                .gpo_dout_13()
+                .modify(|_, w| w.dout_52().variant(val)),
+            53 => pinctrl
+                .gpo_dout_13()
+                .modify(|_, w| w.dout_53().variant(val)),
+            54 => pinctrl
+                .gpo_dout_13()
+                .modify(|_, w| w.dout_54().variant(val)),
+            55 => pinctrl
+                .gpo_dout_13()
+                .modify(|_, w| w.dout_55().variant(val)),
+            56 => pinctrl
+                .gpo_dout_14()
+                .modify(|_, w| w.dout_56().variant(val)),
+            57 => pinctrl
+                .gpo_dout_14()
+                .modify(|_, w| w.dout_57().variant(val)),
+            58 => pinctrl
+                .gpo_dout_14()
+                .modify(|_, w| w.dout_58().variant(val)),
+            59 => pinctrl
+                .gpo_dout_14()
+                .modify(|_, w| w.dout_59().variant(val)),
+            60 => pinctrl
+                .gpo_dout_15()
+                .modify(|_, w| w.dout_60().variant(val)),
+            61 => pinctrl
+                .gpo_dout_15()
+                .modify(|_, w| w.dout_61().variant(val)),
+            62 => pinctrl
+                .gpo_dout_15()
+                .modify(|_, w| w.dout_62().variant(val)),
+            63 => pinctrl
+                .gpo_dout_15()
+                .modify(|_, w| w.dout_63().variant(val)),
             _ => (),
         }
     }
 }
 
 impl<'g, GPIO: GpioCfg, MODE> Gpio<'g, GPIO, Enabled, Input, MODE> {
-    /// Gets whether the input pin is set. 
+    /// Gets whether the input pin is set.
     pub fn bit_is_set(&self) -> bool {
         // [`IOIRQ_15`] and [`IOIRQ_16`] are the GPIO sync registers, for GPIO 0-31 and 32-63
         // respectively.
@@ -374,7 +469,9 @@ impl<'g, GPIO: GpioCfg, MODE> Gpio<'g, GPIO, Enabled, Input, MODE> {
     }
 }
 
-impl<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> ErrorType for Gpio<'g, GPIO, ENABLED, DIRECTION, MODE> {
+impl<'g, GPIO: GpioCfg, ENABLED, DIRECTION, MODE> ErrorType
+    for Gpio<'g, GPIO, ENABLED, DIRECTION, MODE>
+{
     type Error = Error;
 }
 
@@ -407,7 +504,7 @@ impl<'g, GPIO: GpioCfg, MODE> InputPin for Gpio<'g, GPIO, Enabled, Input, MODE> 
 /// ```no_run
 /// use jh71xx_hal::{gpio, pac};
 ///
-/// let dp = pac::Peripherals::take().unwrap(); 
+/// let dp = pac::Peripherals::take().unwrap();
 /// let gpio0 = gpio::get_gpio(dp.SYS_PINCTRL.gpio_0());
 /// ```
 pub fn get_gpio<GPIO: GpioCfg>(periph: &GPIO) -> Gpio<GPIO, Disabled, Nop, Nop> {

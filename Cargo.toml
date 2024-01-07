@@ -21,16 +21,14 @@ features = ["restore-state-u64x16"]
 version = "0.10"
 
 [dependencies.jh71xx-pac]
-version = "0.2"
-git = "https://github.com/rmsyn/jh71xx-pac"
+version = "0.3"
 
 [dependencies.panic-halt]
 version = "0.2"
 optional = true
 
 [dependencies.riscv-rt]
-version = "0.11"
-git = "https://github.com/rust-embedded/riscv-rt"
+version = "0.11.0"
 optional = true
 
 [dev-dependencies.defmt]
@@ -40,9 +38,5 @@ version = "0.3"
 version = "0.3"
 
 [features]
-visionfive2-12a = ["jh71xx-pac/visionfive2-12a"]
-visionfive2-12a-rt = ["jh71xx-pac/visionfive2-12a-rt"]
-visionfive2-12a-rts = ["jh71xx-pac/visionfive2-12a-rts"]
-visionfive2-13b = ["jh71xx-pac/visionfive2-13b"]
-visionfive2-13b-rt = ["jh71xx-pac/visionfive2-13b-rt"]
-visionfive2-13b-rts = ["jh71xx-pac/visionfive2-13b-rts"]
+rt = ["jh71xx-pac/rt", "riscv-rt"]
+rts = ["rt", "jh71xx-pac/rts", "riscv-rt/s-mode"]
