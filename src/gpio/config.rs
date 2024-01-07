@@ -4,14 +4,14 @@ use crate::pac::sys_pinctrl::*;
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum DriveStrength {
-    /// 2 mA rated output drive strength. 
+    /// 2 mA rated output drive strength.
     #[default]
     Two = 0b00,
-    /// 4 mA rated output drive strength. 
+    /// 4 mA rated output drive strength.
     Four = 0b01,
-    /// 8 mA rated output drive strength. 
+    /// 8 mA rated output drive strength.
     Eight = 0b10,
-    /// 12 mA rated output drive strength. 
+    /// 12 mA rated output drive strength.
     Twelve = 0b11,
 }
 
@@ -201,10 +201,12 @@ macro_rules! gpio_cfg {
             }
 
             fn input_enable(&self, enable: bool) {
-                self.modify(|_, w| if enable {
-                    w.ie().set_bit()
-                } else {
-                    w.ie().clear_bit()
+                self.modify(|_, w| {
+                    if enable {
+                        w.ie().set_bit()
+                    } else {
+                        w.ie().clear_bit()
+                    }
                 })
             }
 
@@ -283,7 +285,7 @@ macro_rules! gpio_cfg {
                 });
             }
         }
-    }
+    };
 }
 
 gpio_cfg!(GPIO_0, 0);
