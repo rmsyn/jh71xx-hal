@@ -63,6 +63,42 @@ pub struct I2c<I2C: I2cPeripheral> {
 }
 
 impl<I2C: I2cPeripheral> I2c<I2C> {
+    /// Creates a new [I2c].
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// # use jh71xx_hal::{pac, i2c};
+    /// let dp = pac::Peripherals::take().unwrap();
+    /// let _i2c0 = i2c::I2c::new(dp.I2C0);
+    /// ```
+    pub fn new(i2c: I2C) -> Self {
+        Self {
+            i2c,
+            status: Status::default(),
+            rx_fifo_depth: 0,
+            tx_fifo_depth: 0,
+            tx_buf_len: 0,
+            rx_buf_len: 0,
+            tx_outstanding: 0,
+            rx_outstanding: 0,
+            tx_flag: I2cMsgFlag::default(),
+            rx_flag: I2cMsgFlag::default(),
+            functionality: I2cFunc::default(),
+            master_cfg: I2cCon::default(),
+            ss_hcnt: 0,
+            ss_lcnt: 0,
+            fs_hcnt: 0,
+            fs_lcnt: 0,
+            hs_hcnt: 0,
+            hs_lcnt: 0,
+            sda_hold_time: 0,
+            timings: I2cTimings::default(),
+            mode: I2cOpMode::default(),
+            msg_err: 0,
+        }
+    }
+
     /// Gets the [Status].
     pub const fn status(&self) -> Status {
         self.status
