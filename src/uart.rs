@@ -21,16 +21,14 @@ pub const TIMEOUT_US: u64 = 1_000_000;
 /// Represents UART TX functionality.
 ///
 /// Inspired by `esp-hal` implementation: <https://github.com/esp-rs/esp-hal>
-pub struct UartTx<'d, Block, T: Serial<Block>> {
-    _serial: PhantomData<&'d mut T>,
-    _block: PhantomData<Block>,
+pub struct UartTx<T: Serial> {
+    _serial: PhantomData<T>,
 }
 
-impl<'d, Block, T: Serial<Block>> UartTx<'d, Block, T> {
+impl<'d, T: Serial> UartTx<T> {
     fn new_inner() -> Self {
         Self {
             _serial: PhantomData,
-            _block: PhantomData,
         }
     }
 
@@ -63,16 +61,14 @@ impl<'d, Block, T: Serial<Block>> UartTx<'d, Block, T> {
 /// Represents UART RX functionality.
 ///
 /// Based on the implementation in `esp-hal`: <https://github.com/esp-rs/esp-hal>
-pub struct UartRx<'d, Block, T: Serial<Block>> {
-    _serial: PhantomData<&'d mut T>,
-    _block: PhantomData<Block>,
+pub struct UartRx<T: Serial> {
+    _serial: PhantomData<T>,
 }
 
-impl<'d, B, T: Serial<B>> UartRx<'d, B, T> {
+impl<T: Serial> UartRx<T> {
     fn new_inner() -> Self {
         Self {
             _serial: PhantomData,
-            _block: PhantomData,
         }
     }
 
@@ -110,19 +106,27 @@ impl<'d, B, T: Serial<B>> UartRx<'d, B, T> {
 ///
 /// Based on the implementation in [`esp-hal`](https://github.com/esp-rs/esp-hal).
 #[repr(C)]
-pub struct Uart<'d, B, UART: Serial<B>> {
-    tx: UartTx<'d, B, UART>,
-    rx: UartRx<'d, B, UART>,
+pub struct Uart<UART: Serial> {
+    tx: UartTx<UART>,
+    rx: UartRx<UART>,
     timeout: u64,
     config: Config,
 }
 
-impl<'d, B, UART: Serial<B>> Uart<'d, B, UART> {
+impl<UART: Serial> Uart<UART> {
     /// Creates a new [Uart].
     ///
     /// Parameters:
     ///
     /// - `uart`: UART peripheral that implements the [Serial] trait.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// # use jh71xx_hal::{pac, uart};
+    /// let dp = pac::Peripherals::take().unwrap();
+    /// let _uart = uart::Uart::new(dp.UART0);
+    /// ```
     pub fn new(uart: UART) -> Self {
         Self::new_with_config(uart, TIMEOUT_US, Config::new())
     }
@@ -134,6 +138,26 @@ impl<'d, B, UART: Serial<B>> Uart<'d, B, UART> {
     /// - `uart`: UART peripheral that implements the [Serial] trait.
     /// - `timeout`: time in microseconds before aborting transaction.
     /// - `config`: UART configuration parameters.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// # use jh71xx_hal::{pac, uart};
+    /// let dp = pac::Peripherals::take().unwrap();
+    /// let _uart = uart::Uart::new_with_config(
+    ///     dp.UART0,
+    ///     // timeout in microseconds
+    ///     1_000_000,
+    ///     uart::Config {
+    ///         data_len: uart::DataLength::Eight,
+    ///         stop: uart::Stop::One,
+    ///         parity: uart::Parity::None,
+    ///         baud_rate: uart::BaudRate::B115200,
+    ///         // default APB0 clock frequency
+    ///         clk_hz: 50_000_000,
+    ///     },
+    /// );
+    /// ```
     pub fn new_with_config(mut uart: UART, timeout: u64, config: Config) -> Self {
         uart.setup(config).ok();
 
@@ -146,7 +170,7 @@ impl<'d, B, UART: Serial<B>> Uart<'d, B, UART> {
     }
 
     /// Splits the [Uart] into a transmitter and receiver
-    pub fn split(self) -> (UartTx<'d, B, UART>, UartRx<'d, B, UART>) {
+    pub fn split(self) -> (UartTx<UART>, UartRx<UART>) {
         (self.tx, self.rx)
     }
 
@@ -199,43 +223,43 @@ impl<'d, B, UART: Serial<B>> Uart<'d, B, UART> {
     }
 }
 
-impl<'d, B, UART: Serial<B>> io::ErrorType for Uart<'d, B, UART> {
+impl<UART: Serial> io::ErrorType for Uart<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> io::ErrorType for UartRx<'d, B, UART> {
+impl<UART: Serial> io::ErrorType for UartRx<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> io::ErrorType for UartTx<'d, B, UART> {
+impl<UART: Serial> io::ErrorType for UartTx<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::ErrorType for Uart<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::ErrorType for Uart<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::ErrorType for UartRx<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::ErrorType for UartRx<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::ErrorType for UartTx<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::ErrorType for UartTx<UART> {
     type Error = Error;
 }
 
-impl<'d, B, UART: Serial<B>> io::Read for Uart<'d, B, UART> {
+impl<UART: Serial> io::Read for Uart<UART> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
         self.rx.read_bytes(buf)
     }
 }
 
-impl<'d, B, UART: Serial<B>> io::Read for UartRx<'d, B, UART> {
+impl<UART: Serial> io::Read for UartRx<UART> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
         self.read_bytes(buf)
     }
 }
 
-impl<'d, B, UART: Serial<B>> io::Write for Uart<'d, B, UART> {
+impl<UART: Serial> io::Write for Uart<UART> {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
         self.tx.write_bytes(buf)
     }
@@ -246,7 +270,7 @@ impl<'d, B, UART: Serial<B>> io::Write for Uart<'d, B, UART> {
     }
 }
 
-impl<'d, B, UART: Serial<B>> io::Write for UartTx<'d, B, UART> {
+impl<UART: Serial> io::Write for UartTx<UART> {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
         self.write_bytes(buf)
     }
@@ -257,19 +281,19 @@ impl<'d, B, UART: Serial<B>> io::Write for UartTx<'d, B, UART> {
     }
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::Read for Uart<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::Read for Uart<UART> {
     fn read(&mut self) -> nb::Result<u8, Self::Error> {
         Ok(self.rx.read_byte()?)
     }
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::Read for UartRx<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::Read for UartRx<UART> {
     fn read(&mut self) -> nb::Result<u8, Self::Error> {
         Ok(self.read_byte()?)
     }
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::Write for Uart<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::Write for Uart<UART> {
     fn write(&mut self, val: u8) -> nb::Result<(), Self::Error> {
         Ok(self.tx.write_byte(val)?)
     }
@@ -279,7 +303,7 @@ impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::Write for Uart<'d, B, UART
     }
 }
 
-impl<'d, B, UART: Serial<B>> embedded_hal_nb::serial::Write for UartTx<'d, B, UART> {
+impl<UART: Serial> embedded_hal_nb::serial::Write for UartTx<UART> {
     fn write(&mut self, val: u8) -> nb::Result<(), Self::Error> {
         Ok(self.write_byte(val)?)
     }
