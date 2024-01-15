@@ -119,6 +119,14 @@ impl<UART: Serial> Uart<UART> {
     /// Parameters:
     ///
     /// - `uart`: UART peripheral that implements the [Serial] trait.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// # use jh71xx_hal::{pac, uart};
+    /// let dp = pac::Peripherals::take().unwrap();
+    /// let _uart = uart::Uart::new(dp.UART0);
+    /// ```
     pub fn new(uart: UART) -> Self {
         Self::new_with_config(uart, TIMEOUT_US, Config::new())
     }
@@ -130,6 +138,26 @@ impl<UART: Serial> Uart<UART> {
     /// - `uart`: UART peripheral that implements the [Serial] trait.
     /// - `timeout`: time in microseconds before aborting transaction.
     /// - `config`: UART configuration parameters.
+    ///
+    /// Example:
+    ///
+    /// ```no_run
+    /// # use jh71xx_hal::{pac, uart};
+    /// let dp = pac::Peripherals::take().unwrap();
+    /// let _uart = uart::Uart::new_with_config(
+    ///     dp.UART0,
+    ///     // timeout in microseconds
+    ///     1_000_000,
+    ///     uart::Config {
+    ///         data_len: uart::DataLength::Eight,
+    ///         stop: uart::Stop::One,
+    ///         parity: uart::Parity::None,
+    ///         baud_rate: uart::BaudRate::B115200,
+    ///         // default APB0 clock frequency
+    ///         clk_hz: 50_000_000,
+    ///     },
+    /// );
+    /// ```
     pub fn new_with_config(mut uart: UART, timeout: u64, config: Config) -> Self {
         uart.setup(config).ok();
 
