@@ -1,4 +1,50 @@
 //! GPIO configuration and access.
+//!
+//! ## Examples
+//!
+//! ```no_run
+//! use jh71xx_hal::{pac, gpio};
+//! use embedded_hal::digital::{InputPin, OutputPin};
+//!
+//! let dp = pac::Peripherals::take().unwrap();
+//! let gpio0 = gpio::get_gpio(dp.SYS_PINCTRL.gpio_0());
+//!
+//! // Configure as an enabled output
+//! let mut gpio0_out = gpio0.into_enabled_output();
+//!
+//! // Drive pin high
+//! gpio0_out.set_high();
+//! // Drive pin low
+//! gpio0_out.set_low();
+//!
+//! // Configure as an enabled input
+//! let gpio0_in = gpio0_out.into_enabled_input();
+//!
+//! // Configure as high-impedance input
+//! let gpio0_in_high_z = gpio0_in.into_input_high_z();
+//! // Configure as pull-up input
+//! let gpio0_in_pull_up = gpio0_in_high_z.into_input_pull_up();
+//! // Configure as pull-down input
+//! let mut gpio0_in_pull_down = gpio0_in_pull_up.into_input_pull_down();
+//!
+//! // Is pin low?
+//! if gpio0_in_pull_down.is_low().unwrap() {
+//!     // do interesting GPIO stuff
+//! }
+//!
+//! // Is pin high?
+//! if gpio0_in_pull_down.is_high().unwrap() {
+//!     // do interesting GPIO stuff
+//! }
+//! ```
+//!
+//! ### WIP
+//!
+//! `JH7110` SoCs use a pin multiplexer to configure pins for specialized functionality (I2C, SPI, etc.).
+//!
+//! Work is on-going to provide high-level interfaces to configure specialized functions for GPIO pins.
+//!
+//! Low-level configuration can currently be achieved through the `jh71xx-pac` crate which is re-exported as `jh71xx_hal::pac`.
 
 use embedded_hal::digital::{ErrorType, InputPin, OutputPin};
 

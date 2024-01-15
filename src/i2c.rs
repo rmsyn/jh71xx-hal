@@ -1,3 +1,28 @@
+//! I2C configuration and access.
+//!
+//! ## Examples
+//!
+//! ```no_run
+//! use embedded_hal::i2c::{I2c as _, Operation};
+//! use jh71xx_hal::{pac, i2c};
+//!
+//! let dp = pac::Peripherals::take().unwrap();
+//! let mut i2c0 = i2c::I2c::new(dp.I2C0);
+//!
+//! // 7-bit address
+//! let addr: u8 = 1;
+//! let mut read_buf = [0u8; 1];
+//! let read_op = Operation::Read(&mut read_buf);
+//! let mut ops = [read_op];
+//!
+//! i2c0.transaction(addr, ops.as_mut()).unwrap();
+//!
+//! // 10-bit address
+//! let addr: u16 = 1;
+//!
+//! i2c0.transaction(addr, ops.as_mut()).unwrap();
+//! ```
+
 use core::cmp;
 
 use embedded_hal::delay::DelayNs;

@@ -1,3 +1,20 @@
+//! PWM configuration and access.
+//!
+//! ## Examples
+//!
+//! ```no_run
+//! use embedded_hal::pwm::SetDutyCycle;
+//! use jh71xx_hal::{pac, pwm};
+//!
+//! let dp = pac::Peripherals::take().unwrap();
+//! let mut pwm0 = pwm::Pwm::new(dp.PWM);
+//!
+//! // Gets the maximum duty cycle
+//! let max_cycle = pwm0.max_duty_cycle();
+//! // Sets the PWM peripheral to a ~50% duty cycle
+//! pwm0.set_duty_cycle(max_cycle / 2).unwrap();
+//! ```
+
 use embedded_hal::pwm::{ErrorType, SetDutyCycle};
 
 mod error;
