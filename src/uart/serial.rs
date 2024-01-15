@@ -1,21 +1,12 @@
 use crate::pac::{UART0, UART1, UART2, UART3, UART4, UART5};
 
-use crate::pac::uart0::RegisterBlock as U0RegisterBlock;
-use crate::pac::uart1::RegisterBlock as U1RegisterBlock;
-use crate::pac::uart2::RegisterBlock as U2RegisterBlock;
-use crate::pac::uart3::RegisterBlock as U3RegisterBlock;
-use crate::pac::uart4::RegisterBlock as U4RegisterBlock;
-use crate::pac::uart5::RegisterBlock as U5RegisterBlock;
-
 use super::{Config, Error, Result};
 
 /// Traits for access to a UART peripheral.
 ///
 /// Provides abstractions over common actions for UART peripherals, like setup, reading, and
 /// writing.
-pub trait Serial<Block> {
-    /// Gets a reference to the `RegisterBlock` of the UART peripheral.
-    fn register_block<'d>() -> &'d Block;
+pub trait Serial {
     /// Performs setup initialization for the UART peripheral.
     fn setup(&mut self, config: Config) -> Result<()>;
     /// Reads a byte from the UART peripheral (blocking).
@@ -30,12 +21,8 @@ pub trait Serial<Block> {
 //
 // Abstracts register access to follow DRY principles.
 macro_rules! impl_uart {
-    ($uart:ident, $block:ident) => {
-        impl $crate::uart::Serial<$block> for $uart {
-            fn register_block<'d>() -> &'d $block {
-                unsafe { &*Self::ptr() }
-            }
-
+    ($uart:ident) => {
+        impl $crate::uart::Serial for $uart {
             fn setup(&mut self, config: $crate::uart::Config) -> $crate::uart::Result<()> {
                 // wait for UART0 to be idle
                 while self.usr().read().busy().bit_is_set() {}
@@ -97,7 +84,8 @@ macro_rules! impl_uart {
             }
 
             fn read_byte() -> nb::Result<u8, Error> {
-                let uart = Self::register_block();
+                // SAFETY: caller must ensure exclusive access to the UART peripheral
+                let uart = unsafe { &*Self::ptr() };
                 if uart.lsr().read().dr().bit_is_set() {
                     Ok(uart.rbr().read().rbr().bits())
                 } else {
@@ -106,7 +94,8 @@ macro_rules! impl_uart {
             }
 
             fn write_byte(byte: u8) -> nb::Result<(), Error> {
-                let uart = Self::register_block();
+                // SAFETY: caller must ensure exclusive access to the UART peripheral
+                let uart = unsafe { &*Self::ptr() };
                 if uart.lsr().read().thre().bit_is_set() {
                     uart.thr().write(|w| w.thr().variant(byte));
                     Ok(())
@@ -122,9 +111,9 @@ macro_rules! impl_uart {
     };
 }
 
-impl_uart!(UART0, U0RegisterBlock);
-impl_uart!(UART1, U1RegisterBlock);
-impl_uart!(UART2, U2RegisterBlock);
-impl_uart!(UART3, U3RegisterBlock);
-impl_uart!(UART4, U4RegisterBlock);
-impl_uart!(UART5, U5RegisterBlock);
+impl_uart!(UART0);
+impl_uart!(UART1);
+impl_uart!(UART2);
+impl_uart!(UART3);
+impl_uart!(UART4);
+impl_uart!(UART5);
