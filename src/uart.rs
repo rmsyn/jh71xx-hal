@@ -25,7 +25,7 @@ pub struct UartTx<T: Serial> {
     _serial: PhantomData<T>,
 }
 
-impl<'d, T: Serial> UartTx<T> {
+impl<T: Serial> UartTx<T> {
     fn new_inner() -> Self {
         Self {
             _serial: PhantomData,
@@ -283,32 +283,32 @@ impl<UART: Serial> io::Write for UartTx<UART> {
 
 impl<UART: Serial> embedded_hal_nb::serial::Read for Uart<UART> {
     fn read(&mut self) -> nb::Result<u8, Self::Error> {
-        Ok(self.rx.read_byte()?)
+        self.rx.read_byte()
     }
 }
 
 impl<UART: Serial> embedded_hal_nb::serial::Read for UartRx<UART> {
     fn read(&mut self) -> nb::Result<u8, Self::Error> {
-        Ok(self.read_byte()?)
+        self.read_byte()
     }
 }
 
 impl<UART: Serial> embedded_hal_nb::serial::Write for Uart<UART> {
     fn write(&mut self, val: u8) -> nb::Result<(), Self::Error> {
-        Ok(self.tx.write_byte(val)?)
+        self.tx.write_byte(val)
     }
 
     fn flush(&mut self) -> nb::Result<(), Self::Error> {
-        Ok(self.tx.flush()?)
+        self.tx.flush()
     }
 }
 
 impl<UART: Serial> embedded_hal_nb::serial::Write for UartTx<UART> {
     fn write(&mut self, val: u8) -> nb::Result<(), Self::Error> {
-        Ok(self.write_byte(val)?)
+        self.write_byte(val)
     }
 
     fn flush(&mut self) -> nb::Result<(), Self::Error> {
-        Ok(self.flush()?)
+        self.flush()
     }
 }

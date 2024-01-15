@@ -3,6 +3,13 @@ use critical_section::RawRestoreState;
 use crate::pac::PLIC;
 
 /// Disables all interrupts on all cores.
+///
+/// # Safety
+///
+/// Users should not need to call this function directly. Instead, used the [free] function.
+///
+/// This function must **NOT** be called within an interrupt-free context (e.g. in an interrupt
+/// handler).
 #[inline]
 pub unsafe fn disable() -> RawRestoreState {
     let ie = riscv::register::mstatus::read().mie() as u64;
