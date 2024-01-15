@@ -14,4 +14,5 @@ pub mod i2c;
 pub mod interrupt;
 mod macros;
 pub mod pwm;
+pub mod spi;
 pub mod uart;
