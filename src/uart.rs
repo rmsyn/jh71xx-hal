@@ -27,7 +27,9 @@ pub struct UartTx<T: Serial> {
 
 impl<'d, T: Serial> UartTx<T> {
     fn new_inner() -> Self {
-        Self { _serial: PhantomData }
+        Self {
+            _serial: PhantomData,
+        }
     }
 
     /// Writes bytes over serial.
@@ -65,7 +67,9 @@ pub struct UartRx<T: Serial> {
 
 impl<T: Serial> UartRx<T> {
     fn new_inner() -> Self {
-        Self { _serial: PhantomData }
+        Self {
+            _serial: PhantomData,
+        }
     }
 
     /// Reads bytes from the peripheral.

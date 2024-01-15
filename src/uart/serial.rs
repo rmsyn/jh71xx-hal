@@ -105,6 +105,11 @@ macro_rules! impl_uart {
             }
 
             fn flush() -> nb::Result<(), Error> {
+                // SAFETY: caller must ensure exclusive access to the UART peripheral
+                let uart = unsafe { &*Self::ptr() };
+                // Reset the receive and transmit FIFOs
+                uart.fcr()
+                    .modify(|_, w| w.rfifor().set_bit().xfifor().set_bit());
                 Ok(())
             }
         }
