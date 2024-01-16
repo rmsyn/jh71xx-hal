@@ -3,6 +3,7 @@ use core::fmt;
 use embedded_hal::digital::Error as GpioError;
 pub use embedded_hal::digital::ErrorKind;
 
+/// Convenience [`Result`](core::result::Result) alias for JH71xx GPIO module.
 pub type Result<T> = core::result::Result<T, Error>;
 
 /// GPIO errors.
