@@ -17,10 +17,12 @@ extern crate embedded_io as io;
 
 pub extern crate jh71xx_pac as pac;
 
+#[cfg(feature = "rt")]
 pub mod critical_section;
 pub mod delay;
 pub mod gpio;
 pub mod i2c;
+#[cfg(feature = "rt")]
 pub mod interrupt;
 mod macros;
 pub mod pwm;
