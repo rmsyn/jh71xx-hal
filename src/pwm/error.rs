@@ -1,6 +1,6 @@
 use embedded_hal::pwm::{Error as PwmError, ErrorKind};
 
-/// Convenience alias for the PWM module [`Result`](core::result::Result) type.
+/// Convenience [`Result`](core::result::Result) alias for JH71xx PWM module.
 pub type Result<T> = core::result::Result<T, Error>;
 
 /// Represents the PWM module error type.

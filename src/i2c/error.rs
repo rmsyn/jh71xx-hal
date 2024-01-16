@@ -2,7 +2,7 @@ use core::convert::Infallible;
 
 use embedded_hal::i2c::{Error as I2cError, ErrorKind, NoAcknowledgeSource};
 
-/// Convenience alias for the I2C `Result` type.
+/// Convenience [`Result`](core::result::Result) alias for JH71xx I2C module.
 pub type Result<T> = core::result::Result<T, Error>;
 
 /// I2C Error types

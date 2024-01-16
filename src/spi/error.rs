@@ -4,7 +4,7 @@ use embedded_hal::spi::{Error as SpiError, ErrorKind};
 
 use super::DataSize;
 
-/// Convenience [`Result`](core::result::Result] alias for JH71xx SPI module.
+/// Convenience [`Result`](core::result::Result) alias for JH71xx SPI module.
 pub type Result<T> = core::result::Result<T, Error>;
 
 /// SPI error type for JH71xx SoCs.

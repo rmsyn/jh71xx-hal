@@ -1,4 +1,4 @@
-/// Convenience alias for the UART result type.
+/// Convenience [`Result`](core::result::Result) alias for JH71xx UART module.
 pub type Result<T> = core::result::Result<T, Error>;
 
 /// Error type for the UART peripheral
