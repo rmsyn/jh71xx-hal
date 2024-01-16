@@ -7,7 +7,7 @@ name: CI
 
 jobs:
   ci-linux:
-    runs-on: ubuntu-20.04
+    runs-on: 3.3.0
     strategy:
       matrix:
         rust: [stable, nightly]
@@ -35,7 +35,7 @@ jobs:
         run: cargo check --target ${{ matrix.target }} --all-features
 
   ci-test:
-    runs-on: ubuntu-20.04
+    runs-on: 3.3.0
     strategy:
       matrix:
         rust: [stable, nightly]

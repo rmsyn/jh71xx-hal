@@ -2,6 +2,12 @@
 name = "jh71xx-hal"
 version = "0.1.0"
 edition = "2021"
+authors = ["rmsyn <rmsyn@proton.me>"]
+repository = "https://codeberg.org/rmsyn/jh71xx-hal"
+categories = ["embedded", "hardware-support", "no-std"]
+description = "Hardware abstraction library for the JH71xx SoCs"
+keywords = ["riscv", "jh7110", "hal", "soc"]
+license = "GPL-3.0-only"
 
 [dependencies]
 bitflags = "2.4"
