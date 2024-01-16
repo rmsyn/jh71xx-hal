@@ -1,0 +1,54 @@
+on:
+  push:
+    branches: [ staging, trying, master ]
+  pull_request:
+
+name: CI
+
+jobs:
+  ci-linux:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        rust: [stable, nightly]
+        target: [x86_64-unknown-linux-gnu, riscv64imac-unknown-none-elf]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - name: Install Rust target
+        run: rustup target install --toolchain=${{ matrix.rust }} ${{ matrix.target }}
+
+      - name: Install Clippy and rust-fmt
+        run: rustup component add rustfmt clippy --toolchain ${{ matrix.rust }} 
+
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Lint code
+        run: cargo clippy --target ${{ matrix.target }} --all-features
+
+      - name: Check code
+        run: cargo check --target ${{ matrix.target }} --all-features
+
+  ci-test:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        rust: [stable, nightly]
+        target: [x86_64-unknown-linux-gnu]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - name: Install Rust target
+        run: rustup target install --toolchain=${{ matrix.rust }} ${{ matrix.target }}
+
+      - name: Test code
+        run: cargo test --target ${{ matrix.target }} --all
