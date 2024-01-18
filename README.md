@@ -1,5 +1,7 @@
 # JH71xx-HAL
 
+**NOTE** `jh71xx-hal` has moved to Codeberg: <https://codeberg.org/rmsyn/jh71xx-hal>
+
 `jh71xx-hal` is a HAL (hardware abstraction layer) crate for `JH71xx`-based SoCs from StarFive.
 
 Currently, only the `JH7110` SoC is supported. `JH7100` appears to be discontinued, and the next SoC line from StarFive will be the `JH81xx` series.
