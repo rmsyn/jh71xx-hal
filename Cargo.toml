@@ -1,6 +1,6 @@
 [package]
 name = "jh71xx-hal"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["rmsyn <rmsyn@proton.me>"]
 repository = "https://codeberg.org/rmsyn/jh71xx-hal"
