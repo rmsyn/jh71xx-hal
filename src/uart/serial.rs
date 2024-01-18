@@ -110,6 +110,9 @@ macro_rules! impl_uart {
                 // Read if the TX FIFO is empty, block otherwise
                 if uart.lsr().read().thre().bit_is_set() {
                     Ok(())
+                } else if uart.usr().read().busy().bit_is_clear() {
+                    uart.fcr().modify(|_, w| w.xfifor().set_bit());
+                    Err(nb::Error::WouldBlock)
                 } else {
                     Err(nb::Error::WouldBlock)
                 }
